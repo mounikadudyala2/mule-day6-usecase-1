@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8ed1b23d-c021-4c0b-88ef-74f2e1e56317" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="day6_usecase_01-parent" doc:id="74b5beda-04e5-4795-9228-0f1f413b50bd" >
+		<http:listener doc:name="Listener" doc:id="a3e6454a-a7e2-4b62-83b9-ef25ec57ec0a" config-ref="HTTP_Listener_config" path="/day6-usecase01"/>
+		<ee:transform doc:name="Transform Message" doc:id="a1ec991d-9db6-445f-94c5-a0213984574e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+Mule::lookup('day6_usecase_01-child',{test:'hello welcome'})]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="day6_usecase_01-child" doc:id="85ca4510-7b38-4302-ac4a-71a6d47984e3" >
+		<set-payload doc:name="Set Payload" doc:id="3007724f-59f7-49a5-8994-8541df4da64a" value="#[payload.test++' to mule soft']"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e2f0120a-ab0e-407a-9c48-bf6a29b75484" message="#[payload]"/>
+	</flow>
+</mule>
